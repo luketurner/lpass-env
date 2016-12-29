@@ -1,0 +1,81 @@
+#!/bin/bash
+# lpass-env - non-official env variable management wrapper for 'lpass' CLI
+# WARNING: This script can execute arbitrary commands stored in a LastPass file.
+# ONLY run this script on LastPass keys with known, trusted content.
+
+# Copyright (c) 2016 Luke Turner
+# Released under MIT License (SPDX:MIT)
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+readonly ACTION="${1:-help}"
+readonly KEY_NAME="${2:-}"
+
+onexit() {
+	local EXIT_CODE="$?"
+	if [[ "$EXIT_CODE" != 0 ]]; then
+		echo "Script exited with code $EXIT_CODE" >&2
+	fi
+}
+
+trap onexit EXIT
+
+help_message() {
+	echo ""
+	echo "Usage: lpass-env [action] [lpass-key-id]"
+	echo ""
+	echo "Valid actions: help, shell, print, export"
+	echo ""
+	echo "Examples"
+	echo ""
+	echo "  Launch a subshell with env vars:"
+	echo "    $ lpass-env shell my/key/name"
+	echo ""
+	echo "  Write the vars to a file:"
+	echo "    $ lpass-env print my/key/name > ~/my_vars.sh"
+	echo ""
+	echo "  Export the vars into running shell:"
+	echo "    $ \$(lpass-env export my/key/name)"
+	echo ""
+}
+
+invalid_action() {
+	echo "[lpass-env] Invalid action '$ACTION'."
+	help_message
+	exit 1
+}
+
+launch_shell() {
+	echo "[lpass-env] Launching shell with environment from: $KEY_NAME"
+	$(lpass show --notes "$KEY_NAME" | awk '{ print "export", $0 }')
+	PS1="lpass-env[$KEY_NAME]:\W \u\$ " bash
+}
+
+print_vars() {
+	lpass show --notes "$KEY_NAME"
+}
+
+export_vars() {
+	lpass show --notes "$KEY_NAME" | awk '{ print "export", $0 }'
+}
+
+
+if [[ "$ACTION" == "help" ]]; then
+	help_message
+	exit
+fi
+
+if [[ "$ACTION" =~ shell|print|export && "$KEY_NAME" == "" ]]; then
+	echo "Missing lpass-key-id parameter."
+	help_message
+	exit 1
+fi
+
+case "$ACTION" in
+	shell)  launch_shell   ;;
+	print)  print_vars     ;;
+	export) export_vars    ;;
+	*)      invalid_action ;;
+esac
