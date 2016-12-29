@@ -24,7 +24,7 @@ However, `lpass-env` depends on the LastPass CLI tool `lpass`, which must also b
 
 ## Usage
 
-`lpass-env` is a tiny script with a simple interface, that calls into `lpass` to do the dirty work of actually managing credentials. The wrapper script itself is extremely short and (hopefully) self-documenting. However, it will probably take some practice to take advantage of it in your workflow. You can run `lpass-env help` for help and usage examples, or just look at them here:
+`lpass-env` is an extremely short script that calls into `lpass` to do the dirty work of actually managing credentials. However, it does have a few different parameters and modes of operation, which are intended to support different common ways of using environment variables. You can run `lpass-env help` for help and usage examples, or just look at them here:
 
 ```
 Usage: lpass-env [action] [lpass-key-id]
@@ -45,7 +45,7 @@ Examples
 
 ### Managing credentials with lpass
 
-The `lpass-env` script does not provide an easy way to add and edit credentials, because the existing `lpass edit` command is already ergonomic enough. Instead, `lpass-env` gives a read-only interface and assumes that it will only be used with LastPass credentials where the `notes` field contains environment variable declarations. The declarations should not include `export`, `readonly`, or (obviously) `local`.
+The `lpass-env` script does not provide a way to modify credentials, because the existing `lpass edit` command is already good for that. Instead, `lpass-env` gives a read-only interface and assumes that it will only be used with LastPass credentials where the `notes` field contains environment variable declarations. Said declarations should not include `export`, `readonly`, or (obviously) `local`.
 
 Consider this example, which creates a new credential and then exports it into the current shell session:
 
@@ -76,4 +76,5 @@ It is possible to have more than one environment variable declared per credentia
 ---
 
 Copyright (c) 2016 Luke Turner
+
 Released under MIT License (SPDX:MIT)
