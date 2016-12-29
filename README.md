@@ -17,7 +17,7 @@ On the other hand, using LastPass introduces quite a bit of overhead compared to
 It's just a Bash script. You can install it however you want, but something like this seems pretty popular:
 
 ``` bash
-curl https://raw.githubusercontent.com/luketurner/lpass-env/master/lpass-env -o /usr/local/bin/lpass-env && chmod +x /usr/local/bin/lpass-env
+curl https://raw.githubusercontent.com/luketurner/lpass-env/master/bin/lpass-env -o /usr/local/bin/lpass-env && chmod +x /usr/local/bin/lpass-env
 ```
 
 However, `lpass-env` depends on the LastPass CLI tool `lpass`, which must also be installed on your machine. See the [lpass docs](https://github.com/lastpass/lastpass-cli) for more information about that. (Spoiler for OS X users: `brew update && brew install lastpass-cli --with-pinentry`) 
