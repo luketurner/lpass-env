@@ -45,7 +45,7 @@ Examples
 
 ### Managing credentials with lpass
 
-The `lpass-env` script does not provide a way to modify credentials, because the existing `lpass edit` command is already good for that. Instead, `lpass-env` gives a read-only interface and assumes that it will only be used with LastPass credentials where the `notes` field contains environment variable declarations. Said declarations should not include `export`, `readonly`, or (obviously) `local`.
+The `lpass-env` script does not provide a way to add or edit credentials, because the existing `lpass edit` command is already good for that. Instead, `lpass-env` gives a read-only interface and assumes that it will only be used with existing LastPass credentials where the `notes` field contains environment variable declarations (like `MYKEYNAME=value`). Said declarations should not include `export`, `readonly`, or (obviously) `local`, but they actually can include other variable expansions or command substitutions (i.e. `${ ... }` and `$( ... )`)
 
 Consider this example, which creates a new credential and then exports it into the current shell session:
 
@@ -54,6 +54,7 @@ Consider this example, which creates a new credential and then exports it into t
 $ cat | lpass edit --notes my-dev-environment << EOF
 MY_API_KEY=asdf
 MY_API_SECRET=fdsa
+MY_API_CLIENT_ID=$(hostname)
 EOF
 
 # Exports the credentials into our environment
@@ -61,17 +62,19 @@ EOF
 # it's wrapped in $( ... )
 $ $(lpass-env export my-dev-environment)
 
-# Now, 'env' includes MY_API_KEY and MY_API_SECRET
+# Now, 'env' includes MY_API_KEY, MY_API_SECRET, and MY_API_CLIENT_ID
 $ env | grep MY_API
 ```
 
-(An alternative way to get variables is to use the `lpass-env shell` to create a subshell with the right stuff in the `env` automatically: `lpass-env shell my-dev-environment`.)
+(An alternative way to get the variables into scope is to use the `lpass-env shell` to create a subshell: `lpass-env shell my-dev-environment` instead of `$(lpass-env export my-dev-environment)`)
 
 ### Organizing credentials
 
 I have a practice of putting all my `lpass-env` credentials inside an `ENV` folder in my LastPass vault. Within that folder, I create LastPass credentials for all my API keys, access tokens, or whatever. (I have nested subfolders, too.)
 
 It is possible to have more than one environment variable declared per credential, and I use that feature to declare codependent variables side-by-side (for example, if you have an access key plus a secret key, or a set of configuration variables for an app). However, if the variables are not codependent, I declare them in separate credentials so that I can limit which applications can see which credentials, and also to make sharing them easier.
+
+I recommend you find a system that works well for you and integrates into the rest of your LastPass workflow. `lpass-env` only uses Notes fields and it makes no assumptions about how your LastPass credentials are managed, so it should be easily integrated into your personal system.
 
 ---
 
