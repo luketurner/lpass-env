@@ -12,6 +12,11 @@ This script is intended as a replacement to putting variables in `~/.bash_profil
 
 On the other hand, using LastPass introduces quite a bit of overhead compared to `~/.bash_profile`. If you aren't familiar with the [lpass](https://github.com/lastpass/lastpass-cli) tool, check that out first -- there's a bit of a learning curve.
 
+**Q:** Why use LastPass instead of \<X>?
+
+**A:** Check out the "Why LastPass?" section of my [announcement blog post](http://blog.luketurner.org/announcing-lpass-add-and-lpass-env-ergonomically-get-secrets-out-of-lastpass).
+
+
 ## Installation
 
 It's just a Bash script. You can install it however you want, but something like this seems pretty popular:
