@@ -58,7 +58,7 @@ print_vars() {
 }
 
 export_vars() {
-	lpass show --notes "$KEY_NAME" | awk '{ print "export", $0 }'
+	lpass show --notes "$KEY_NAME" | sed -z 's/^/export /; s/\n/ /g'
 }
 
 
