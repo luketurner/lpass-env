@@ -49,7 +49,7 @@ invalid_action() {
 
 launch_shell() {
 	echo "[lpass-env] Launching shell with environment from: $KEY_NAME"
-	$(lpass show --notes "$KEY_NAME" | awk '{ print "export", $0 }')
+	$(lpass show --notes "$KEY_NAME" | sed -E "/^(#.*)*$/d" | awk '{ print "export", $0 }')
 	PS1="lpass-env[$KEY_NAME]:\W \u\$ " bash
 }
 
@@ -58,7 +58,7 @@ print_vars() {
 }
 
 export_vars() {
-	lpass show --notes "$KEY_NAME" | awk '{ print "export", $0 }'
+	lpass show --notes "$KEY_NAME" | sed -E "/^(#.*)*$/d" | awk '{ print "export", $0 }'
 }
 
 
