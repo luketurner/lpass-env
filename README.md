@@ -48,6 +48,12 @@ Examples
     $ $(lpass-env export my/key/name)
 ```
 
+### Usage with spaces
+
+If your environment variables have quoted spaces (e.g. `FOO="bar baz"`), the `$(lpass-env export foo)` syntax won't correctly interpret the quotes (see [related issue](https://github.com/luketurner/lpass-env/issues/4)). You can consider `eval "$(lpass-env export foo)"` as an alternative that handles them correctly.
+
+As with anything involving `eval`, it's not really recommended. But if you need it, the option is there at your own risk.
+
 ### Managing credentials with lpass
 
 The `lpass-env` script does not provide a way to add or edit credentials, because the existing `lpass edit` command is already good for that. Instead, `lpass-env` gives a read-only interface and assumes that it will only be used with existing LastPass credentials where the `notes` field contains environment variable declarations (like `MYKEYNAME=value`). Said declarations should not include `export`, `readonly`, or (obviously) `local`, but they actually can include other variable expansions or command substitutions (i.e. `${ ... }` and `$( ... )`)
